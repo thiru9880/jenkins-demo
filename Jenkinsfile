@@ -4,18 +4,29 @@ pipeline {
     stages {
         stage('SourceCode') {
             steps {
-                git branch: 'main', url: 'https://github.com/thiru9880/spring-petclinic-thiru.git'
+                git url: 'https://github.com/thiru9880/spring-petclinic-thiru.git',
+                    branch: 'main'
             } 
         }
         stage('Build the code') {
             steps{
-                sh 'mvn package'
+                sh script: 'mvn clean package'
             }   
         }
-        stage('Archive Test result') {
+        stage('Reporting') {
             steps {
-                junit '**/surefire-reports/*xml'
+                junit testResults: '/target/surefire-reports/*.xml'
             }   
         }
     }
+post {
+    success {
+        // sending the success mail
+        echo 'success'
+    }
+    unsuccessful {
+        // send the unsuccess mail
+        echo 'failure'
+    }
+}
 }
