@@ -1,15 +1,15 @@
-pipeline {
+pipeline{
     agent any
-    stages {
-        stage('Example') {
-            steps {
-                echo 'Hello World'
-            }
+
+    stages{
+        stage('SourceCode'){
+            git branch: 'main', url: 'https://github.com/thiru9880/spring-petclinic-thiru.git'
         }
-    }
-    post { 
-        always { 
-            echo 'I will always say Hello again!'
+        stage('Build the code'){
+            sh 'mvn package'
+        }
+        stage('Archive Test result'){
+            junit '**/surefire-reports/*xml'
         }
     }
 }
